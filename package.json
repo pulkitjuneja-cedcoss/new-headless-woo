@@ -1,0 +1,30 @@
+{
+  "name": "second-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "second-app",
+  "keywords": [
+    "gatsby"
+  ],
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean"
+  },
+  "dependencies": {
+    "@pasdo501/gatsby-source-woocommerce": "^0.14.3",
+    "gatsby": "^3.6.2",
+    "gatsby-plugin-image": "^1.8.0",
+    "gatsby-plugin-sharp": "^3.8.0",
+    "gatsby-plugin-theme-ui": "^0.10.1",
+    "gatsby-source-filesystem": "^3.8.0",
+    "gatsby-source-graphql": "^3.8.0",
+    "gatsby-source-wordpress": "^5.8.0",
+    "gatsby-transformer-sharp": "^3.8.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "theme-ui": "^0.10.0"
+  }
+}
