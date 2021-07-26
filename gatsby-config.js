@@ -14,6 +14,12 @@ module.exports = {
         url: "http://localhost/web4/wordpress/graphql",
       },
     },
+    {
+      resolve: 'gatsby-plugin-apollo',
+      options: {
+        uri: 'http://localhost:8000/___graphql'
+      }
+    },
     // {
     //   resolve: "gatsby-source-wordpress",
     //   options: {
@@ -78,10 +84,18 @@ module.exports = {
     {
       resolve: "gatsby-source-filesystem",
       options: {
-        name: "images",
-        path: "./src/images/",
+        name: "markdown-pages",
+        path: "./src/markdown-pages",
       },
-      __key: "images",
+     // __key: "images",
     },
+    `gatsby-transformer-remark`,
+    // {
+    //       resolve: `gatsby-source-filesystem`,
+    //       options: {
+    //         name: `menu`,
+    //         path: `/gatsby-new/src/template/MenuPages`, // for the path you can change it based on your preferred folder structure
+    //       },
+    // },
   ],
 };
