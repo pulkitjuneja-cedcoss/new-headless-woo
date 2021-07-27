@@ -10,23 +10,27 @@ import { useQuery, gql,useLazyQuery } from "@apollo/client";
 
 const Shop = () => {
 
-  const [pageInfo, setPageInfo] = useState({ endCursor: "", previousPage: "", startCursor: "", nextPage: ""});
+  //const [pageInfo, setPageInfo] = useState({ endCursor: "", previousPage: "", startCursor: "", nextPage: ""});
+  const [ startCursor, setStartCursor ] = useState("");
+  const [ endCursor, setEndCursor ] = useState("");
   const [page, setPage] = useState(1);
   const [catFilter, setCatFilter] = useState("");
   const [ catEvent, setCatEvent ] = useState("");
   // const [ filterData, setFilterData ] = useState([]);
-  const [ Skip, setSkip ] = useState(false);
+ // const [ Skip, setSkip ] = useState(false);
   const [products, setProducts] = useState([]);
   const [ productsInfo, setProductsInfo ] = useState({})
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [ LoadMoreCursor, setLoadMoreCursor ] = useState("");
+  const [ first, setFirst ] = useState(2);
+  const [ last, setLast ] = useState(null);
 
-console.log(pageInfo.startCursor,pageInfo.endCursor)
+console.log(startCursor,endCursor)
   // RequiredProducts();
   const GetProducts = gql`
-  query MyQuery ( $after: String, $before: String, $first: Int!, $catFilter: String ){
+  query MyQuery ( $after: String, $before: String, $first: Int, $catFilter: String, $last: Int ){
     swapi {
-        products ( where: {category: $catFilter }, after: $after,before: $before, first: $first ){
+        products ( where: {category: $catFilter }, after: $after,before: $before, first: $first, last: $last ){
           edges   {
             node {
               name
@@ -61,10 +65,13 @@ console.log(pageInfo.startCursor,pageInfo.endCursor)
 
   `;
 
-  console.log("pageInfo",pageInfo.startCursor);
-  console.log("skip",Skip);
+  //console.log("pageInfo",pageInfo.startCursor);
+  // console.log("skip",Skip);
   const {error,loading,data,fetchMore}  = useQuery(GetProducts,{variables:{
-    after:pageInfo.startCursor, before: pageInfo.endCursor, first: 2, last: 0, catFilter: catFilter }});
+    after: startCursor, before: endCursor, first: first, last: last, catFilter: catFilter }});
+
+    //after: after, before: before, first: first, last: last, catFilter: catFilter }});
+
 
   console.log("rerendered");
 
@@ -78,6 +85,12 @@ console.log(pageInfo.startCursor,pageInfo.endCursor)
     setCatFilter("");
     setCatEvent("");
   }
+
+  // const setCursors = (cursor) => {
+  //   if( cursor == "endCursor"){
+  //     setEndCursor( data.swapi.products.pageInfo.startCursor );
+  //   }
+  // }
 
   return(
     <div> 
@@ -110,7 +123,7 @@ console.log(pageInfo.startCursor,pageInfo.endCursor)
       <button onClick={  () => {
       // setLoadMoreCursor( data.swapi.products.pageInfo.startCursor);
          const loadcursor = data.swapi.products.pageInfo.endCursor;
-          console.log(pageInfo.endCursor);
+          //console.log(pageInfo.endCursor);
            fetchMore({
             variables: {
               after: loadcursor,
@@ -130,36 +143,53 @@ console.log(pageInfo.startCursor,pageInfo.endCursor)
           });
      } }>Load More</button>
       
-     <button onClick={ async () => {
-       setPageInfo({...pageInfo, endCursor: data.previousPageData.products.pageInfo.startCursor });
-         const cursor = data.nextPageData.products.pageInfo.startCursor;
-          console.log(pageInfo.endCursor);
-          await fetchMore({
+     <button onClick={ () => {
+       console.log("prevoius page data");
+         
+        setFirst(null);
+        setLast(2);
+        //setCursors("endCursor");
+        // setPageInfo({...pageInfo, startCursor: "" });
+        setEndCursor( data.swapi.products.pageInfo.startCursor );
+        setStartCursor("");
+         const cursor = data.swapi.products.pageInfo.startCursor;
+          console.log("endcursor",endCursor);
+          console.log("startCursor",startCursor);
+          fetchMore({
             variables: {
               before: cursor,
               last: 2,
-              after: "",
+              after: null,
+              first: null
             },
           });
+          
 
      } }>PreviousPage</button>
-     <button onClick={ async () => {
+
+
+
+     <button onClick={  () => {
           // setIsLoadingMore(true);
-          // setSkip(true);
-        //setPageInfo(data.swapi.products.pageInfo.endCursor);
-         setPageInfo({...pageInfo, startCursor: data.previousPageData.products.pageInfo.endCursor });
-         const cursor = data.nextPageData.products.pageInfo.endCursor;
-          console.log(pageInfo.startCursor);
-          await fetchMore({
+          console.log(data.swapi.products.pageInfo.endCursor);
+          
+           setEndCursor(null);
+           setFirst(2);
+           setLast(null);
+           setStartCursor(data.swapi.products.pageInfo.endCursor);
+        
+         const cursor = data.swapi.products.pageInfo.endCursor;
+          console.log("start",startCursor);
+           fetchMore({
             variables: {
               after: cursor,
               first: 2,
-              before: "",
+              before: null,
+              last: null
 
             },
           });
-         // setIsLoadingMore(false);
-         //setSkip(true);
+        
         }}>NextPage</button>
 
     </div>
