@@ -12,20 +12,22 @@ const Shop = () => {
 
   const [pageInfo, setPageInfo] = useState({ endCursor: "", previousPage: "", startCursor: "", nextPage: ""});
   const [page, setPage] = useState(1);
-  const [productFilter, setFilter] = useState("");
+  const [catFilter, setCatFilter] = useState("");
+  const [ catEvent, setCatEvent ] = useState("");
   // const [ filterData, setFilterData ] = useState([]);
   const [ Skip, setSkip ] = useState(false);
   const [products, setProducts] = useState([]);
   const [ productsInfo, setProductsInfo ] = useState({})
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [ LoadMoreCursor, setLoadMoreCursor ] = useState("");
 
-
+console.log(pageInfo.startCursor,pageInfo.endCursor)
   // RequiredProducts();
   const GetProducts = gql`
-  query MyQuery ( $after: String){
-      swapi {
-        products ( after: $after, first: 2 ){
-          edges  {
+  query MyQuery ( $after: String, $before: String, $first: Int!, $catFilter: String ){
+    swapi {
+        products ( where: {category: $catFilter }, after: $after,before: $before, first: $first ){
+          edges   {
             node {
               name
               id
@@ -61,55 +63,103 @@ const Shop = () => {
 
   console.log("pageInfo",pageInfo.startCursor);
   console.log("skip",Skip);
-  const {error,loading,data,fetchMore}  = useQuery(GetProducts,{variables:{after:pageInfo.endCursor},skip:false});
-
-  // useEffect( ()=> {
-  //   if( data && data.swapi && data.swapi.products ){
-
-  //     console.log("cursor")
-  //     setPageInfo({...pageInfo, startCursor: data.swapi.products.pageInfo.endCursor });
-  //   }
-  // },[data]) 
-  
+  const {error,loading,data,fetchMore}  = useQuery(GetProducts,{variables:{
+    after:pageInfo.startCursor, before: pageInfo.endCursor, first: 2, last: 0, catFilter: catFilter }});
 
   console.log("rerendered");
 
-  // ,{variables: {start:pageInfo.endCursor}}
+  const handleInputFilter = event => {
+    console.log("handle");
+    setCatFilter(event.target.value);
+  }
 
-    const handleInputFilter = event => {
-      console.log("handle");
-      setFilter(event.target.value);
-    }
-
+  const resetFilter = event => {
+    console.log("reset");
+    setCatFilter("");
+    setCatEvent("");
+  }
 
   return(
     <div> 
       <h1>Welcome to our Shop</h1>
-      <input type="text" placeholder="enter post name" onKeyPress={
+      <input type="text" placeholder="Enter Product Category" value={catEvent} onKeyPress={
         (e) => {
-          console.log(e);
+          console.log("ok",e.nativeEvent.key);
+          const fil = catEvent + e.nativeEvent.key;
+          setCatEvent(fil);
           if (e.charCode == 13) {
-            handleInputFilter(e);
+           //handleInputFilter(e);
+           setCatFilter(e.target.value);
+           console.log(e.target.value);
+           fetchMore({
+            variables: {
+              before: "",
+              first: 1,
+              after: "",
+              catFilter: e.target.value
+            },
+          });
           }
+          
         }
       }
       />
+      <button onClick={()=>{resetFilter()}}>Reset Filter</button>
       {console.log(data)}
-      
-     <button >PreviousPage</button>
-     <button onClick={ () => {
-          setIsLoadingMore(true);
-          setSkip(true);
-          console.log("hhy");
-         // setPageInfo(data.swapi.products.pageInfo.endCursor);
-         setPageInfo({...pageInfo, startCursor: data.swapi.products.pageInfo.endCursor });
-          console.log(data.swapi.products.pageInfo.endCursor);
-          fetchMore({
+
+      <button onClick={  () => {
+      // setLoadMoreCursor( data.swapi.products.pageInfo.startCursor);
+         const loadcursor = data.swapi.products.pageInfo.endCursor;
+          console.log(pageInfo.endCursor);
+           fetchMore({
             variables: {
-              after: data.swapi.products.pageInfo.endCursor,
+              after: loadcursor,
+              first: 2,
+              before: "",
+            },
+            updateQuery: (prevResult,{fetchMoreResult}) =>{
+              console.log(prevResult);
+              console.log(fetchMoreResult);
+              fetchMoreResult.swapi.products.edges = [
+                ...prevResult.swapi.products.edges,
+                ...fetchMoreResult.swapi.products.edges
+              ];
+              console.log(fetchMoreResult);
+              // return fetchMoreResult;
+            }
+          });
+     } }>Load More</button>
+      
+     <button onClick={ async () => {
+       setPageInfo({...pageInfo, endCursor: data.previousPageData.products.pageInfo.startCursor });
+         const cursor = data.nextPageData.products.pageInfo.startCursor;
+          console.log(pageInfo.endCursor);
+          await fetchMore({
+            variables: {
+              before: cursor,
+              last: 2,
+              after: "",
             },
           });
-          setIsLoadingMore(false);
+
+     } }>PreviousPage</button>
+     <button onClick={ async () => {
+          // setIsLoadingMore(true);
+          // setSkip(true);
+        //setPageInfo(data.swapi.products.pageInfo.endCursor);
+         setPageInfo({...pageInfo, startCursor: data.previousPageData.products.pageInfo.endCursor });
+         const cursor = data.nextPageData.products.pageInfo.endCursor;
+          console.log(pageInfo.startCursor);
+          await fetchMore({
+            variables: {
+              after: cursor,
+              first: 2,
+              before: "",
+
+            },
+          });
+         // setIsLoadingMore(false);
+         //setSkip(true);
         }}>NextPage</button>
 
     </div>
