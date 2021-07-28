@@ -3,11 +3,13 @@ import "../css/index.css"
 import ProductCard from '../templates/ProductCard';
 import { graphql, useStaticQuery } from 'gatsby';
 import { useState, useEffect } from 'react'; 
+import { Button } from '@cedcommerce/ounce-ui'
+import '@cedcommerce/ounce-ui/dist/index.css'
 // import Products from '../graphql/Products.js';
 
 import { useQuery, gql,useLazyQuery } from "@apollo/client";
 
-
+//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
 const Shop = () => {
 
   //const [pageInfo, setPageInfo] = useState({ endCursor: "", previousPage: "", startCursor: "", nextPage: ""});
@@ -17,7 +19,7 @@ const Shop = () => {
   const [catFilter, setCatFilter] = useState("");
   const [ catEvent, setCatEvent ] = useState("");
   // const [ filterData, setFilterData ] = useState([]);
- // const [ Skip, setSkip ] = useState(false);
+
   const [products, setProducts] = useState([]);
   const [ productsInfo, setProductsInfo ] = useState({})
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -38,6 +40,12 @@ console.log(startCursor,endCursor)
             node {
               name
               id
+              description(format: RAW)
+              productCategories {
+                nodes {
+                  name
+                }
+              }
               galleryImages {
                 nodes {
                   link
@@ -68,13 +76,9 @@ console.log(startCursor,endCursor)
 
   `;
 
-  //console.log("pageInfo",pageInfo.startCursor);
-  // console.log("skip",Skip);
+  
   const {error,loading,data,fetchMore}  = useQuery(GetProducts,{variables:{
     after: startCursor, before: endCursor, first: first, last: last, catFilter: catFilter }});
-
-    //after: after, before: before, first: first, last: last, catFilter: catFilter }});     
-
   
   useEffect(()=>{
     console.log("useEffect called");
@@ -82,7 +86,8 @@ console.log(startCursor,endCursor)
       console.log("inside useEffect");
       console.log(counter, "prev",data.swapi.products.pageInfo.hasPreviousPage,"next",data.swapi.products.pageInfo.hasNextPage);
       setNextPage(data.swapi.products.pageInfo.hasNextPage);
-      setPreviousPage(data.swapi.products.pageInfo.hasPreviousPage)
+      setPreviousPage(data.swapi.products.pageInfo.hasPreviousPage);
+      setProducts(data.swapi.products.edges);
     } 
   },[data])
   console.log("rerendered");
@@ -98,15 +103,12 @@ console.log(startCursor,endCursor)
     setCatEvent("");
   }
 
-  // const setCursors = (cursor) => {
-  //   if( cursor == "endCursor"){
-  //     setEndCursor( data.swapi.products.pageInfo.startCursor );
-  //   }
-  // }
+
 
   return(
     <div> 
       <h1>Welcome to our Shop</h1>
+     
       <input type="text" placeholder="Enter Product Category" value={catEvent} onKeyPress={
         (e) => {
           console.log("ok",e.nativeEvent.key);
@@ -130,7 +132,18 @@ console.log(startCursor,endCursor)
       }
       />
       <button onClick={()=>{resetFilter()}}>Reset Filter</button>
-      {console.log(data)}
+      { 
+      //console.log(data)
+      
+      products.map( product => {
+        if( product !== null || product !== undefined ){
+          console.log(product);
+         return <ProductCard data={product} />
+        }
+       // console.log(product);
+      })
+    
+    }
 
       <button onClick={  () => {
         const loadcursor = data.swapi.products.pageInfo.endCursor;
@@ -229,47 +242,6 @@ console.log(startCursor,endCursor)
 
 export default Shop;
 
-// // $endCursor: String, $startCursor: String
-// // after: $startCursor
-
-// //@include(if: $NextPage)
-
-
-// // export const query = graphql`
-// // query ( $productFilter: String, $startCursor: String) {
-// //   swapi {
-// //     products ( where: {category: $productFilter }, after: $startCursor, first: 2 ) {
-// //       nodes {
-// //         name
-// //         id
-// //         galleryImages {
-// //         nodes {
-// //           link
-// //           id
-// //           uri
-// //           title
-// //           slug
-// //           }
-// //         }
-// //         image {
-// //           link
-// //           id
-// //           uri
-// //           title(format: RENDERED)
-// //           slug
-// //         }
-// //       }
-// //       pageInfo {
-// //         endCursor
-// //         hasNextPage
-// //         hasPreviousPage
-// //         startCursor
-// //       }
-// //     }
-// //   }
-// // }
-
-// // `;
 
 
 
