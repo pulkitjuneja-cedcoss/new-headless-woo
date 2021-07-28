@@ -24,6 +24,9 @@ const Shop = () => {
   const [ LoadMoreCursor, setLoadMoreCursor ] = useState("");
   const [ first, setFirst ] = useState(2);
   const [ last, setLast ] = useState(null);
+  const [ previousPage, setPreviousPage ] = useState(false);
+  const [ nextPage, setNextPage ] = useState(true);
+  const [ counter, setCounter ] = useState(0);
 
 console.log(startCursor,endCursor)
   // RequiredProducts();
@@ -70,9 +73,18 @@ console.log(startCursor,endCursor)
   const {error,loading,data,fetchMore}  = useQuery(GetProducts,{variables:{
     after: startCursor, before: endCursor, first: first, last: last, catFilter: catFilter }});
 
-    //after: after, before: before, first: first, last: last, catFilter: catFilter }});
+    //after: after, before: before, first: first, last: last, catFilter: catFilter }});     
 
-
+  
+  useEffect(()=>{
+    console.log("useEffect called");
+    if( data && data.swapi && data.swapi.products){
+      console.log("inside useEffect");
+      console.log(counter, "prev",data.swapi.products.pageInfo.hasPreviousPage,"next",data.swapi.products.pageInfo.hasNextPage);
+      setNextPage(data.swapi.products.pageInfo.hasNextPage);
+      setPreviousPage(data.swapi.products.pageInfo.hasPreviousPage)
+    } 
+  },[data])
   console.log("rerendered");
 
   const handleInputFilter = event => {
@@ -121,38 +133,43 @@ console.log(startCursor,endCursor)
       {console.log(data)}
 
       <button onClick={  () => {
-      // setLoadMoreCursor( data.swapi.products.pageInfo.startCursor);
-         const loadcursor = data.swapi.products.pageInfo.endCursor;
-          //console.log(pageInfo.endCursor);
-           fetchMore({
-            variables: {
-              after: loadcursor,
-              first: 2,
-              before: "",
-            },
-            updateQuery: (prevResult,{fetchMoreResult}) =>{
-              console.log(prevResult);
-              console.log(fetchMoreResult);
-              fetchMoreResult.swapi.products.edges = [
-                ...prevResult.swapi.products.edges,
-                ...fetchMoreResult.swapi.products.edges
-              ];
-              console.log(fetchMoreResult);
-              // return fetchMoreResult;
-            }
-          });
-     } }>Load More</button>
+        const loadcursor = data.swapi.products.pageInfo.endCursor;
+        setIsLoadingMore(true);
+        fetchMore({
+          variables: {
+            after: loadcursor,
+            first: 2,
+            before: "",
+          },
+          updateQuery: (prevResult,{fetchMoreResult}) =>{
+            console.log(prevResult);
+            console.log(fetchMoreResult);
+            fetchMoreResult.swapi.products.edges = [
+              ...prevResult.swapi.products.edges,
+              ...fetchMoreResult.swapi.products.edges
+            ];
+            console.log(fetchMoreResult);
+            // return fetchMoreResult;
+          }
+        });
+        setIsLoadingMore(false); 
+        }}>Load More</button>
       
      <button onClick={ () => {
-       console.log("prevoius page data");
-         
-        setFirst(null);
-        setLast(2);
-        //setCursors("endCursor");
-        // setPageInfo({...pageInfo, startCursor: "" });
-        setEndCursor( data.swapi.products.pageInfo.startCursor );
-        setStartCursor("");
-         const cursor = data.swapi.products.pageInfo.startCursor;
+       console.log("previousPage",previousPage);
+      // console.log(counter);
+       if(previousPage){
+        //  const c= counter + 1;
+        //   setCounter(c);
+          console.log("prevoius page data");
+          setIsLoadingMore(true);
+          // setNextPage(data.swapi.products.pageInfo.hasNextPage);
+          // setPreviousPage(data.swapi.products.pageInfo.hasPreviousPage);  
+          setFirst(null);
+          setLast(2);
+          setEndCursor( data.swapi.products.pageInfo.startCursor );
+          setStartCursor("");
+          const cursor = data.swapi.products.pageInfo.startCursor;
           console.log("endcursor",endCursor);
           console.log("startCursor",startCursor);
           fetchMore({
@@ -164,21 +181,29 @@ console.log(startCursor,endCursor)
             },
           });
           
-
-     } }>PreviousPage</button>
+          setIsLoadingMore(false);
+        }
+      } }>PreviousPage</button>
 
 
 
      <button onClick={  () => {
-          // setIsLoadingMore(true);
-          console.log(data.swapi.products.pageInfo.endCursor);
-          
+       console.log(counter);
+       console.log("nextPage",nextPage);
+        if(nextPage){
+          // const c= counter + 1;
+          // setCounter(c);
+          //console.log("prevoius page data");
+           setIsLoadingMore(true);
+           console.log(data.swapi.products.pageInfo.endCursor);
+          //  setNextPage(data.swapi.products.pageInfo.hasNextPage);
+          //  setPreviousPage(data.swapi.products.pageInfo.hasPreviousPage);
            setEndCursor(null);
            setFirst(2);
            setLast(null);
            setStartCursor(data.swapi.products.pageInfo.endCursor);
         
-         const cursor = data.swapi.products.pageInfo.endCursor;
+          const cursor = data.swapi.products.pageInfo.endCursor;
           console.log("start",startCursor);
            fetchMore({
             variables: {
@@ -189,6 +214,10 @@ console.log(startCursor,endCursor)
 
             },
           });
+          console.log(counter, "prev",data.swapi.products.pageInfo.hasPreviousPage,"next",data.swapi.products.pageInfo.hasNextPage);
+          
+          setIsLoadingMore(false);
+        }  
         
         }}>NextPage</button>
 
