@@ -28,6 +28,24 @@ const Products = (props) => {
                 title(format: RENDERED)
                 slug
               }
+              ... on SWAPI_SimpleProduct {
+                id
+                name
+                price
+                salePrice
+                regularPrice
+              }
+              ... on SWAPI_VariableProduct {
+                id
+                name
+                salePrice
+                regularPrice
+                price
+              }
+              reviews {
+                nodes {
+                  content(format: RAW)
+                }
             }
           }
           pageInfo {

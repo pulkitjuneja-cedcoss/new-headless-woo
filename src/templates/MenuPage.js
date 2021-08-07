@@ -1,14 +1,10 @@
 import React from 'react';
-import { graphql,useStaticQuery } from 'gatsby';
+import { graphql } from 'gatsby';
 // import data from '../Page'
 
 const MenuPage = ({data}) => {
   
- console.log(data);
-
-// return(
-//   <div>i from menupage</div>
-// )
+// console.log(data);
 
  let source,desc;
    const {title,content,featuredImage}  = data.swapi.page;

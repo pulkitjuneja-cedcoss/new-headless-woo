@@ -5,6 +5,7 @@ import Thumbnail from './Thumbnail'
 import { useState,useEffect } from 'react';
 import { Button,Modal,TextStyles } from '@cedcommerce/ounce-ui'
 import '@cedcommerce/ounce-ui/dist/index.css'
+import AddToCart from './AddToCart'
 
 const ProductCard = (props) =>{
     const [ category, setCategory ] = useState("");
@@ -16,6 +17,35 @@ const ProductCard = (props) =>{
     const [ galleryImagesExist, setGalleryImagesExist ] = useState(false);
     const [ galleryImagesLinks, setGalleryImagesLinks ] = useState([]);
     const cat = "";
+
+
+    const tabs = [
+        {
+            id: 0,
+            content: 'All'
+        },
+        {
+            id: 1,
+            content: 'Error'
+        },
+        {
+            id: 2,
+            content: 'Pending'
+        },
+        {
+            id: 3,
+            content: 'Not Uploaded'
+        },
+        {
+            id: 4,
+            content: 'Warning'
+        },
+        {
+            id: 5,
+            content: 'Finished'
+        },
+    ];
+    // data =================================  product
 
     useEffect(()=>{
         let flag = false;
@@ -63,10 +93,13 @@ const ProductCard = (props) =>{
             }
               
             <div class="product-details"> 
+            {console.log(props.data.node)}
+            <h3><b>{props.data.node.price}</b></h3>
                 <h3><b>{props.data.node.name}</b></h3>
                 {/* <p>{props.data.node.name}</p>  */}
                 <Button type="Primary" onClick={ ()=>{ setModal(true); }}>View</Button>
-                <Button type="Outlined">Add to cart</Button>
+                <AddToCart product={props.data} />
+                {/* <Button type="Outlined" >Add to cart</Button> */}
                 <Modal 
                     open={modal}
                     heading=""
@@ -115,7 +148,7 @@ const ProductCard = (props) =>{
                                             // console.log(allCategories.nodes);
                                             
                                             Object.keys(allCategories.nodes).map( category => {
-                                                console.log(allCategories.nodes[category]);
+                                              //  console.log(allCategories.nodes[category]);
                                                 const catObject = allCategories.nodes[category];
                                                 // if( key === "name" ){
                                                 //     cat = cat + key.nodes.category["name"];
@@ -130,6 +163,18 @@ const ProductCard = (props) =>{
                                     }</h4>
                             </div>
                         }/>
+
+                    {/* <Tabs value={tabs} selected={this.state.selectedTab} onChange={(selectedTab) => {
+                        if (!this.state.inProcess) {
+                            console.log(selectedTab);
+                            this.setState({selectedTab: selectedTab, inProcess: true});
+                            this.getRows(selectedTab);
+                        } else {
+                            // console.log('in wait msg');
+                            // alert('please wait');
+                            this.notify("Please Wait", true);
+                        }
+                    }}/>    */}
 
                 </Modal>
             </div>

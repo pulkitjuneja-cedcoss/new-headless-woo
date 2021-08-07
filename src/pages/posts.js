@@ -2,14 +2,14 @@ import React from 'react';
 import "../css/index.css"
 // import Pager from '../components/pager'
 import PostTemplate from '../templates/PostTemplate';
-import { graphql,useStaticQuery } from 'gatsby';
+import { graphql } from 'gatsby';
 import {useState, useEffect} from 'react';
 
 
 const Posts = ({data}) => {
 
   const [ filter, setFilter ] = useState("");
-  const [ filterData, setFilterData ] = useState([]);
+  // const [ filterData, setFilterData ] = useState([]);
   const [ posts, setPosts ] = useState([]);
   const [ page, setPage ] = useState(1);
 

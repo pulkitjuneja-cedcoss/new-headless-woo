@@ -1,29 +1,25 @@
 import React from 'react';
 import "../css/index.css"
 import ProductCard from '../templates/ProductCard';
-import { graphql, useStaticQuery } from 'gatsby';
+import { Link } from 'gatsby';
 import { useState, useEffect } from 'react'; 
-import { Spinner } from '@cedcommerce/ounce-ui'
+import { Spinner,Button } from '@cedcommerce/ounce-ui'
 import '@cedcommerce/ounce-ui/dist/index.css'
+import Header from '../templates/Header.js'
+import Footer from '../templates/Footer.js'
 // import Products from '../graphql/Products.js';
 
-import { useQuery, gql,useLazyQuery } from "@apollo/client";
+import { useQuery, gql } from "@apollo/client";
 
 //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
 const Shop = () => {
 
-  //const [pageInfo, setPageInfo] = useState({ endCursor: "", previousPage: "", startCursor: "", nextPage: ""});
   const [ startCursor, setStartCursor ] = useState("");
   const [ endCursor, setEndCursor ] = useState("");
-  const [page, setPage] = useState(1);
   const [catFilter, setCatFilter] = useState("");
   const [ catEvent, setCatEvent ] = useState("");
-  // const [ filterData, setFilterData ] = useState([]);
-
   const [products, setProducts] = useState([]);
-  const [ productsInfo, setProductsInfo ] = useState({})
   const [isLoadingMore, setIsLoadingMore] = useState(true);
-  const [ LoadMoreCursor, setLoadMoreCursor ] = useState("");
   const [ first, setFirst ] = useState(2);
   const [ last, setLast ] = useState(null);
   const [ previousPage, setPreviousPage ] = useState(false);
@@ -64,6 +60,25 @@ console.log(startCursor,endCursor)
                 slug
                 sourceUrl(size: LARGE)
               }
+              ... on SWAPI_SimpleProduct {
+                id
+                name
+                price
+                salePrice
+                regularPrice
+              }
+              ... on SWAPI_VariableProduct {
+                id
+                name
+                salePrice
+                regularPrice
+                price
+              }
+              reviews {
+                nodes {
+                  content(format: RAW)
+                }
+              }
             }
           }
           pageInfo {
@@ -93,12 +108,6 @@ console.log(startCursor,endCursor)
       setIsLoadingMore(false);
     } 
   },[data])
-  console.log("rerendered");
-
-  const handleInputFilter = event => {
-    console.log("handle");
-    setCatFilter(event.target.value);
-  }
 
   const resetFilter = event => {
     console.log("reset");
@@ -113,30 +122,22 @@ console.log(startCursor,endCursor)
  else{
     return(
       <div> 
+        <Header/>
         <h1>Welcome to our Shop</h1>
-      
-        <input type="text" placeholder="Enter Product Category" value={catEvent} onKeyPress={
-          (e) => {
-            console.log("ok",e.nativeEvent.key);
-            const fil = catEvent + e.nativeEvent.key;
-            setCatEvent(fil);
-            if (e.charCode == 13) {
-            //handleInputFilter(e);
+        <Button><Link to="/cart">View Cart</Link></Button>
+
+       <input type="text" placeholder="Enter Product Category" value={catEvent} onKeyPress={(e)=>{
+         console.log("key",e);
+         if (e.charCode == 13) {
             setCatFilter(e.target.value);
             console.log(e.target.value);
             fetchMore({
-              variables: {
-                before: "",
-                first: 1,
-                after: "",
-                catFilter: e.target.value
-              },
+              variables: { before: "", first: 1, after: "",  catFilter: e.target.value },
             });
-            }
-            
           }
-        }
+        }}  onChange = { (e) => { setCatEvent(e.target.value); } }
         />
+
         <button onClick={()=>{resetFilter()}}>Reset Filter</button>
         { 
         
@@ -207,8 +208,6 @@ console.log(startCursor,endCursor)
             //console.log("prevoius page data");
             setIsLoadingMore(true);
             console.log(data.swapi.products.pageInfo.endCursor);
-            //  setNextPage(data.swapi.products.pageInfo.hasNextPage);
-            //  setPreviousPage(data.swapi.products.pageInfo.hasPreviousPage);
             setEndCursor(null);
             setFirst(2);
             setLast(null);
@@ -217,21 +216,16 @@ console.log(startCursor,endCursor)
             const cursor = data.swapi.products.pageInfo.endCursor;
             console.log("start",startCursor);
             fetchMore({
-              variables: {
-                after: cursor,
-                first: 2,
-                before: null,
-                last: null
-
-              },
+              variables: { after: cursor, first: 2, before: null, last: null },
             });
-            console.log(counter, "prev",data.swapi.products.pageInfo.hasPreviousPage,"next",data.swapi.products.pageInfo.hasNextPage);
+            //console.log(counter, "prev",data.swapi.products.pageInfo.hasPreviousPage,"next",data.swapi.products.pageInfo.hasNextPage);
             
             setIsLoadingMore(false);
           }  
           
           }}>NextPage</button>
-
+       
+      <Footer /> 
       </div>
     )
   }   

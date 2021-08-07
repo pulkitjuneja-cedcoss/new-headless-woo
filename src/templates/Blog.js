@@ -1,8 +1,7 @@
 import React from 'react';
 import "../css/index.css"
-// import Pager from '../components/pager'
-import PostTemplate from './PostTemplate';
-import { graphql,useStaticQuery } from 'gatsby';
+// import PostTemplate from './PostTemplate';
+import { graphql } from 'gatsby';
 import {useState, useEffect} from 'react';
 
 
@@ -15,30 +14,26 @@ const Blog = ({data,pageContext}) => {
   //const [ nextPage, setNextPage ] = useState(0);
 
   const hasPreviousPage = () => {
-    console.log("ok");
     let p = page > 1 ? ( page - 1 ) : 1 ; 
     setPage(p);
   }
 
   const hasNextPage = () => {
-    console.log("done");
     let q = page + 1; 
     setPage(q);
   }
 
-  console.log(data);
-  console.log(pageContext);
+  
   const skip = pageContext.skip;
   const limit = pageContext.limit;
-  console.log(skip,limit);
   const length = skip + limit;
 
   // const allPosts = data.swapi.posts.nodes;
-  console.log(data.swapi.posts.nodes);
+  //console.log(data.swapi.posts.nodes);
   //setPosts(allPosts);
 
   const allPosts = data.swapi.posts.nodes.slice(skip,length);
-  console.log(allPosts);
+  //console.log(allPosts);
 
     
   useEffect( ()=>{
@@ -58,33 +53,15 @@ const Blog = ({data,pageContext}) => {
     }
   )
 
-  console.log(filteredData);
+ // console.log(filteredData);
   setFilterData( filteredData );
   
   }, [filter] );
 
 
-  useEffect ( () => {
-    console.log("post to  updat");
-   // const requiredPosts = filterData.slice(skip,length);
-  // console.log(requiredPosts);
-    setPosts(filterData);
-    }, [filterData]
-  );
+  useEffect ( () => { setPosts(filterData); }, [filterData]);
 
-  const handleInputFilter = event => {
-    console.log("handle");
-    setFilter(event.target.value);
-
-    //const Posts = data.swapi.posts.nodes || [];
-    // console.log(allPosts);
-
-  }
-
-
-
-  console.log(page)
-
+  const handleInputFilter = event => { setFilter(event.target.value); }
 
   return (
     <div > i am from blog
@@ -109,7 +86,7 @@ const Blog = ({data,pageContext}) => {
       //     )
       // })
       }
-      {/* <Pager pageContext={pageContext} /> */}
+    
       <button onClick={hasPreviousPage}>PreviousPage</button>
       <button onClick={hasNextPage}>NextPage</button>
     </div>

@@ -1,9 +1,8 @@
  import * as React from "react"
- import { useStaticQuery, graphql, Link } from "gatsby"
+//  import { useStaticQuery, graphql, Link } from "gatsby"
  import Header from "../templates/Header"
  import Footer from "../templates/Footer"
 
- import Shop from "./shop"
 
 //  import {
 //   ApolloClient,

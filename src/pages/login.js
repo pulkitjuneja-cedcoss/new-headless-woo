@@ -4,6 +4,7 @@ import React from 'react';
 const Login = () => {
  
   return (
+    
     <div class="login-page">
     <div class="form">
       <div class="login">
@@ -20,6 +21,7 @@ const Login = () => {
       </form>
     </div>
   </div>
+  
      
   );
 };
