@@ -3,17 +3,21 @@ import { useState } from 'react';
 import { Spinner } from '@cedcommerce/ounce-ui';
 const axios = require('axios').default
 
-const OrderStatus = (props) => {
+const OrderStatus = ({location}) => {
+
   const [ orderId, setOrderId ] = useState(''); 
   const [ apiResponse, setApiResponse ] = useState('');
   const [ apiError, setApiError ] = useState('');
   const [ loading, setLoading ] = useState(false);
   const [ fetchingOrder, setFetchingOrder ] = useState(false);
 
+  const [ trigger, setTrigger ] = useState(true);
   
+  console.log(location);
 
   const fetOrderDetails = async (id) => {
     setFetchingOrder(true);
+    setTrigger(false);
     try {
         const response = await axios.post('https://localhost/web4/wordpress/wp-json/wc/v3/orders/' + id + '?consumer_key='
         + process.env.REACT_APP_WC_CONSUMER_KEY + '&consumer_secret=' + process.env.REACT_APP_WC_CONSUMER_SECRET
@@ -32,6 +36,15 @@ const OrderStatus = (props) => {
       )
     
   }
+
+  
+    if( trigger && location.state !== null && location.state.id !== null){
+     // console.log(location.state.id);
+      setLoading(true);
+      fetOrderDetails(location.state.id) 
+    
+    }
+
  
   return (
     <div>
@@ -40,6 +53,7 @@ const OrderStatus = (props) => {
           setLoading(true);
           fetOrderDetails(orderId); 
       }}>Fetch</btn>
+      
       {
           fetchingOrder ? (<>
            {

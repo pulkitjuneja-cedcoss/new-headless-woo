@@ -12,7 +12,7 @@ import Footer from '../templates/Footer.js'
 import { useQuery, gql } from "@apollo/client";
 
 //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
-const Shop = (props) => {
+const Shop = () => {
 
   const [ startCursor, setStartCursor ] = useState("");
   const [ endCursor, setEndCursor ] = useState("");
@@ -27,7 +27,6 @@ const Shop = (props) => {
   const [ counter, setCounter ] = useState(0);
 
 console.log(startCursor,endCursor)
-console.log("props",props);
   // RequiredProducts();
   const GetProducts = gql`
   query MyQuery ( $after: String, $before: String, $first: Int, $catFilter: String, $last: Int ){
@@ -106,26 +105,10 @@ console.log("props",props);
                   }
                 }
               }
-              reviewCount
               reviews {
-                edges {
-                  rating
-                  node {
-                    id
-                    approved
-                    content
-                    parentId
-                    replies {
-                      edges {
-                        node {
-                        content
-                        id
-                        date
-                      }
-                    }
-                  }
+                nodes {
+                  content(format: RAW)
                 }
-              }
               }
             }
           }
@@ -172,10 +155,7 @@ console.log("props",props);
       <div> 
         <Header/>
         <h1>Welcome to our Shop</h1>
-        <div class="shop">
-           <Button><Link to="/cart">View Cart</Link></Button>
-        </div>
-        
+        <Button><Link to="/cart">View Cart</Link></Button>
 
        <input type="text" placeholder="Enter Product Category" value={catEvent} onKeyPress={(e)=>{
          console.log("key",e);

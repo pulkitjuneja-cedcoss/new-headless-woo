@@ -31,7 +31,7 @@ const Checkout = (props) => {
     const [ shippingPhoneNumber, setShippingPhoneNumber ] = useState("");
     
     const [ sameAdd, setSameAdd ] = useState(false);
-    const [ event, setEvent ] = useState(0);
+    
     let items = JSON.parse( localStorage.getItem('cedcommerce_cart') );
 
     const dispayTotalAmoount = () => {
@@ -54,7 +54,7 @@ const Checkout = (props) => {
         "billing":{
           "first_name": billingFirstName, "last_name": billingLastName, "companyName": billingCompanyName,
           "address_1": billingStreetAddress, "city": billingCity, "state": billingUserState,"country": billingCountry,
-          "address_2": "", "postcode": billingEmail, "email": billingPostalCode,"phone": billingPhoneNumber,
+          "address_2": "", "postcode": billingPostalCode, "email": billingEmail ,"phone": billingPhoneNumber,
         },
         "shipping":{ 
           "first_name": shippingFirstName, "last_name": shippingLastName, "companyName": shippingCompanyName,
@@ -94,19 +94,22 @@ const Checkout = (props) => {
                 <div class="column"> 
                     <div class="billing">
                         <h2><b>Billing Details</b></h2>
+
                         <div class="billing-details">
-                            <label for="billing-firstName">First Name*</label>
+                            <label for="billing-firstName">First Name*
+                                <input id="billing-firstName" onChange={(e)=>{
+                                setBillingFirstName(e.target.value)}}  />
+                            </label>
                             
-                            <input id="billing-firstName" onChange={(e)=>{
-                            setBillingFirstName(e.target.value)}}  />
                         </div>
                        
 
                         <div class="billing-details">
-                            <label for="billing-lastName">Last Name*</label>
+                            <label for="billing-lastName">Last Name*
+                                <input id="billing-lastName" onChange={(e)=>{
+                                setBillingLastName(e.target.value)}}/>
+                            </label>
                             
-                            <input id="billing-lastName" onChange={(e)=>{
-                            setBillingLastName(e.target.value)}}/>
                         </div>
 
                         <div class="billing-details">
@@ -166,16 +169,20 @@ const Checkout = (props) => {
                     <div class="shipping">
                         <h2><b>Shipping Details</b></h2>
                         <div class="shipping-details">
-                            <label for="shipping-firstName">First Name*</label>
+
+                            <label for="shipping-firstName">First Name*
+                                <input id="shipping-firstName" value={shippingFirstName} onChange={(e)=>{
+                                setShippingFirstName(e.target.value)}}  />
+                            </label>
                             
-                            <input id="shipping-firstName" value={shippingFirstName} onChange={(e)=>{
-                            setShippingFirstName(e.target.value)}}  />
+                           
                         </div>
                         <div class="shipping-details">
-                            <label for="shipping-lastName">Last Name*</label>
+                            <label for="shipping-lastName">Last Name*
+                                <input id="shipping-lastName" value={shippingLastName} onChange={(e)=>{
+                                setShippingLastName(e.target.value)}}/>
+                            </label>
                             
-                            <input id="shipping-lastName" value={shippingLastName} onChange={(e)=>{
-                            setShippingLastName(e.target.value)}}/>
                         </div>
 
                         <div class="shipping-details">
@@ -246,13 +253,13 @@ const Checkout = (props) => {
                                 { Object.keys(items).map( (product_key) => {
                                         console.log(product_key)  
                                         let product = items[product_key];
-                                        let src = "";
+                                        let image_source = "";
                                         let singleProductPrice = parseFloat(product[1].price.slice(1));
                                         let cart =  JSON.parse(localStorage.getItem('cedcommerce_cart'));
                                         let productQuantity = cart[product_key][3]['quantity']; 
                                         let totalProductPrice = productQuantity * singleProductPrice;
                                         
-                                        src = product[0].sourceUrl !== "" ?  product[0].sourceUrl : noProductImage;
+                                        image_source = product[0].sourceUrl !== "" ?  product[0].sourceUrl : noProductImage;
                                     
                                         return (
                                             <div class="checkout-shopping-item">
@@ -262,7 +269,7 @@ const Checkout = (props) => {
                                                 </div>
                                             
                                                 <div class="checkout-shopping-image">
-                                                    <img src={src} alt="product-cart-image" width="50px" height="50px" />
+                                                    <img src={ image_source } alt="product-cart" width="50px" height="50px" />
                                                 </div>
                                             
                                                 <div class="checkout-shopping-product-name">

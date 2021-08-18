@@ -50,7 +50,7 @@
     border-radius: 10px;
   }
 
-  .product-details {
+  .product-cart-details {
     padding-left: 15px;
   }
   
@@ -340,6 +340,9 @@
 /* CREDIT/DEBIT CSS ENDS----------------------------------- */
 
 
+.shop{
+  margin-top:50px;
+}
 
 /* ORDER STATUS CSS STARTS----------------------------------- */
 
@@ -365,6 +368,93 @@
 }
 
 /* ORDER STATUS CSS ENDS----------------------------------- */
+
+
+
+/* SINGLE PRODUCT VIEW CSS STARTS----------------------------------- */
+
+.image-block{
+  text-align: center;
+  padding-top: 70px;
+}
+
+.thumbnail-block{
+  text-align-last: center;
+  padding-top: 30px;
+}
+
+.thumbnail-div{
+ padding: 10px;
+ width:70px;
+ height:70px;
+ display:inline-flex;
+}
+
+.thumbnail{
+  border: 1px solid black;
+  width:50px;
+  height:50px;
+}
+
+.in-stock{
+  color:rgb(6, 6, 194)
+}
+
+.out-of-stock{
+  color:red
+}
+
+.product-details{
+  padding-left: 15px;
+  margin: 15px;
+}
+
+.product-details-heading{
+  padding-top: 70px;
+}
+
+.product-view-tabs{
+  background-color: #e4e3e3;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-top: 30px;
+}
+
+div.additonal_info_div{
+  display:inline-flex;
+  background-color: #04AA6D;
+   
+}
+
+label.additonal_info_label{
+  /* width: 100px;
+  height:auto; */
+  color: red;
+  padding: 0px 20px
+
+}
+
+label.additonal_info_value{
+  /* width: 300px;
+  height:auto; */
+  color: rgb(126, 216, 219);
+  padding: 0px 10px;
+
+}
+
+.parent_review{
+    padding:0px
+}
+
+.parent_review_replies{
+  padding-left: 50px;
+}
+
+/* SINGLE PRODUCT VIEW CSS  ENDS----------------------------------- */
+
+
+
+
   .container {
     padding: 2px 16px;
   }
@@ -377,6 +467,9 @@
     width: 134px;
   margin-top: 4px;
   }
+
+  /* SIGNUP FORM CSS STARTS-----------------------------------------*/
+
   .login-page {
     width: 360px;
     padding: 8% 0 0;
@@ -384,7 +477,10 @@
   }
   .login-page .form .login{
     margin-top: -31px;
-  margin-bottom: 26px;
+     margin-bottom: 26px;
+  }
+  .login-page-hr{
+    margin: 20px 0px;
   }
   .form {
     position: relative;
@@ -392,7 +488,7 @@
     background: #FFFFFF;
     max-width: 360px;
     margin: 0 auto 100px;
-    padding: 45px;
+    padding: 35px;
     text-align: center;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
   }
@@ -448,7 +544,7 @@
   }
 
 
-
+/* SIGNUP FORM CSS STARTS-----------------------------------------*/
 
 
   /* * {box-sizing: border-box} */

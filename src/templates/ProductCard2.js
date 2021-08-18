@@ -1,16 +1,15 @@
 import * as React from "react"
 import "../css/index.css"
 import icon from '../images/icon.png'
-import { Link } from 'gatsby';
-// import Thumbnail from './Thumbnail'
+import Thumbnail from './Thumbnail'
 import { useState,useEffect } from 'react';
-import { Button } from '@cedcommerce/ounce-ui'
+import { Button,Modal,TextStyles } from '@cedcommerce/ounce-ui'
 import '@cedcommerce/ounce-ui/dist/index.css'
 import AddToCart from '../components/AddToCart.js'
 
 const ProductCard = (props) =>{
     // const [ category, setCategory ] = useState("");
-    // const [ modal, setModal ] = useState(false);
+    const [ modal, setModal ] = useState(false);
     const [ featuredImage, setFeaturedImage ] = useState("");
     const [ featuredImageExist, setFeaturedImageExist ] = useState(false);
     const [ displayImage, setDisplayImage ] = useState("");
@@ -27,14 +26,14 @@ const ProductCard = (props) =>{
         let galleryFlag = false;
         let galleryImagesLinks = [];
         Object.keys(props.data.node).map( key => {
-            if( key === "image" && props.data.node[key] !== null ){
+            if( key == "image" && props.data.node[key] !== null ){
                 const ImageObject = props.data.node[key];
                 flag = true;
                 galleryImagesLinks.unshift(ImageObject["sourceUrl"]);
                 setFeaturedImage(ImageObject["sourceUrl"]);
                 setFirstGalleryImageExist(true);
             }
-            if( key === "galleryImages" && props.data.node[key] !== null ){
+            if( key == "galleryImages" && props.data.node[key] !== null ){
                 const GalleryImageObject = props.data.node[key];
                 galleryFlag = true;
                // setFeaturedImage(ImageObject["sourceUrl"]);
@@ -50,7 +49,7 @@ const ProductCard = (props) =>{
         galleryFlag ? setGalleryImagesExist(true) : setGalleryImagesExist(false);
     },[])
 
-    const displayProductImage = (link) =>{
+   const displayProductImage = (link) =>{
         console.log("link",link);
         setDisplayImage(link);
        // setFeaturedImageExist(false)
@@ -85,20 +84,14 @@ const ProductCard = (props) =>{
                     (  <img src= {icon} class= "product-image" alt="ProductImage" width="250px" height="200px" /> ) 
             }
               
-            <div class="product-cart-details"> 
+            <div class="product-details"> 
             {/* {console.log(props.data.node)} */}
                 <h3><b>{props.data.node.price}</b></h3>
                 <h3><b>{props.data.node.name}</b></h3>
             
-                {/* <Button type="Primary" onClick={ ()=>{ setModal(true); }}>View</Button> */}
-                <Button type="Primary"><Link to='/singleProductView' state={{ product: props.data.node }}>View</Link></Button>
-                 
-                 
-                {
-                    "variations" in props.data.node ? (<div></div>) : (<AddToCart product={props.data} />)
-                } 
-                 
-                {/* <Modal 
+                <Button type="Primary" onClick={ ()=>{ setModal(true); }}>View</Button>
+                <AddToCart product={props.data} />
+                <Modal 
                     open={modal}
                     heading=""
                     secondaryAction={{content:"Close",thickness:"thin",onAction:()=>{ setModal(false);setAttr({})} }}
@@ -209,8 +202,7 @@ const ProductCard = (props) =>{
                             ) : (<></>)
                         }
 
-                </Modal> */}
-           
+                </Modal>
             </div>
             
         </div>

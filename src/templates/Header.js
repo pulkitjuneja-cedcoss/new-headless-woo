@@ -45,6 +45,10 @@ const Header = () => {
             </Link>
             <Link to="/checkout">Checkout</Link>
             <Link to="/orderStatus">Order Status</Link>
+            {
+                localStorage.getItem('user')  ?   <Link to="/signout">Sign Out</Link> :  <Link to="/signup">Sign In</Link>
+            }
+            <Link to="/login">Login</Link>
             </div> 
         </div>
     )

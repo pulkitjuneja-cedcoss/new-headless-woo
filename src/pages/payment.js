@@ -17,18 +17,25 @@ const Payment = (props) => {
         <div>
             <h2 class="payment-options-heading">Payment Options</h2>
             <div class="payment-options">
-              <input type="radio" id="cashOnDelivery" name="payment_options" value="cashOnDelivery" onChange={ (e) => {
-                setPaymentMethod("cashOnDelivery");
-              }} />
-              <label for="cashOnDelivery">Cash On Delivery</label>
-              <input type="radio" id="credit/debit" name="payment_options" value="credit/debit"  onChange={ (e) => {
-                setPaymentMethod("credit/debit");
-              }}/>
-              <label for="credit/debit">Credit/Debit Card</label>
-              <input type="radio" id="paypal" name="payment_options" value="paypal"  onChange={ (e) => {
-                setPaymentMethod("paypal");
-              }}/>
-              <label for="paypal">Paypal</label>
+              
+                <label for="cashOnDelivery">
+                    <input type="radio" id="cashOnDelivery" name="payment_options" value="cashOnDelivery" onChange={ (e) => {
+                        setPaymentMethod("cashOnDelivery");
+                    }} />Cash On Delivery
+                </label>
+
+                <label for="credit/debit">
+                    <input type="radio" id="credit/debit" name="payment_options" value="credit/debit"  onChange={ (e) => {
+                        setPaymentMethod("credit/debit");
+                    }}/>Credit/Debit Card
+                </label>
+
+              
+                <label for="paypal">
+                    <input type="radio" id="paypal" name="payment_options" value="paypal"  onChange={ (e) => {
+                    setPaymentMethod("paypal");}}/>Paypal
+                </label>
+
             </div>
 
             {
@@ -44,7 +51,7 @@ const Payment = (props) => {
                         <div>{console.log(orderCreated)}
                             <h3>Your Order has been created successfully. Thankyou for ordering.</h3>  
                             <h4>Your Order Id:{ console.log(orderResponse)}{orderResponse.id}</h4>
-                            <Link to="orderStatus">View Order Status</Link>
+                            <Link to='/orderStatus/' state={{id:orderResponse.id}}>View Order Status</Link>
                         </div>
                     }/>  
 
@@ -64,31 +71,41 @@ const Payment = (props) => {
                 )
             }
             {
-                paymentMethod == "cashOnDelivery" ? (<p>cash</p>) : (<></>)
+                paymentMethod === "cashOnDelivery" ? (<p>cash</p>) : (<></>)
                 
             }
             {
-                paymentMethod == "credit/debit" ? (
+                paymentMethod === "credit/debit" ? (
                 <div class="credit-debit-container">    
                    <div class="credit-debit-row"> 
                         <div class="credit-debit-col-50">
                             {/* <label for="fname">Accepted Cards</label> */}
-                            <label for="cname">Name on Card</label>
-                            <input type="text" id="cname" name="cardname" placeholder="John More Doe" />
-                            <label for="ccnum">Credit card number</label>
-                            <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444" />
-                            <label for="expmonth">Exp Month</label>
-                            <input type="text" id="expmonth" name="expmonth" placeholder="September" />
-                
+
+                            <label for="cname">Name on Card
+                               <input type="text" id="cname" name="cardname" placeholder="John More Doe" />
+                            </label>
+                            
+                            <label for="ccnum">Credit card number
+                               <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444" />
+                            </label>
+
+                            <label for="expmonth">Exp Month
+                               <input type="text" id="expmonth" name="expmonth" placeholder="September" />
+                            </label>
+                            
                             <div class="credit-debit-row">
 
                                 <div class="credit-debit-col-50">
-                                    <label for="expyear">Exp Year</label>
-                                    <input type="text" id="expyear" name="expyear" placeholder="2018"/>
+                                    <label for="expyear">Exp Year
+                                       <input type="text" id="expyear" name="expyear" placeholder="2018"/>
+                                    </label>
+                                    
                                 </div>
                                 <div class="credit-debit-col-50">
-                                    <label for="cvv">CVV</label>
-                                    <input type="text" id="cvv" name="cvv" placeholder="352" />
+                                    <label for="cvv">CVV
+                                       <input type="text" id="cvv" name="cvv" placeholder="352" />
+                                    </label>
+                                   
                                 </div>
                             
                             </div>
@@ -100,9 +117,9 @@ const Payment = (props) => {
                
             }
             {
-                paymentMethod == "paypal" ? (<p>paypal</p>) : (<></>)
+                paymentMethod === "paypal" ? (<p>paypal</p>) : (<></>)
             }
-            <Button onClick={() => { console.log('createOrder'); 
+            <Button onClick={ () => { console.log('createOrder'); 
                let result = CreateOrder(props.orderData);
                 console.log(result);
                 result.then((response)=>{
